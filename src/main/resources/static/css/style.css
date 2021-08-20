@@ -1,0 +1,44 @@
+
+#wrap {
+	width:1200px;
+	height:800px;
+	margin:auto;
+}
+
+header {
+	height:70px;
+	background-color:#f3a3f7;
+}
+
+section {
+	height:600px;
+}
+
+.login-box {
+	width:400px;
+	height:600px;
+}
+
+.logo {
+	height:100px;
+	background-color:#f3a3f7;
+}
+
+.join-box {
+	border:solid 1px black;
+	height:80px;
+}
+
+.join {
+	color:#0335fc;
+}
+
+.signup-box {
+	width:400px;
+	height:500px;		
+}
+
+footer {
+	height:50px;
+	background-color:#f3a3f7;
+}
