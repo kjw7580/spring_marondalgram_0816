@@ -16,20 +16,25 @@
 <body>
 	<div id="wrap">
 		<c:import url="/WEB-INF/jsp/include/header.jsp" />
-		<section class="content d-flex justify-content-center">
+		<section class="content d-flex justify-content-center mt-5 mb-5">
 			<div class="login-box h-100 d-flex justify-content-center align-items-center">
-				<div class="w-100">
-					<div class="logo d-flex form-control justify-content-center align-items-center"><h1>Marondalgram</h1></div>
-					<input type="text" id="loginIdInput" class="form-control mt-3" placeholder="전화번호, 사용자 이름 또는 이메일">
-					<input type="password" id="passwordInput" class="form-control mt-3" placeholder="비밀번호">
-					<button id="loginBtn" type="submit" class="btn btn-primary btn-block mt-3 font-weight-bold">로그인</button>
-					<br><hr><br>
-					<div class="text-center font-weight-bold"><a href="#">Marondalbook으로 로그인</a></div>
-					<div class="text-center mt-3">비밀번호를 잊으셨나요?</div>
-					<div class="text-center"><a href="#">비밀번호 찾기</a></div>
-					<div class="join-box d-flex justify-content-center align-items-center mt-3">
-						<div>계정이 없으신가요?</div>
-						<div class="join font-weight-bold"><a href="/user/signup_view">가입하기</a></div>
+				<div class="d-flex w-100 justify-content-center">
+					<div class="mr-2">
+						<img class="loginBoxImage" src="https://cdn.pixabay.com/photo/2016/12/07/09/43/instagram-1889078_960_720.jpg" alt="loginBoxImage">
+					</div>
+					<div class="ml-2">
+						<div class="logo d-flex form-control justify-content-center align-items-center"><h1>Marondalgram</h1></div>
+						<input type="text" id="loginIdInput" class="form-control mt-3" placeholder="전화번호, 사용자 이름 또는 이메일">
+						<input type="password" id="passwordInput" class="form-control mt-3" placeholder="비밀번호">
+						<button id="loginBtn" type="submit" class="btn btn-primary btn-block mt-3 font-weight-bold">로그인</button>
+						<br><hr><br>
+						<div class="text-center font-weight-bold"><a href="#">Marondalbook으로 로그인</a></div>
+						<div class="text-center mt-3">비밀번호를 잊으셨나요?</div>
+						<div class="text-center"><a href="#">비밀번호 찾기</a></div>
+						<div class="join-box d-flex justify-content-center align-items-center mt-3 form-control">
+							<div>계정이 없으신가요?</div>
+							<div class="join font-weight-bold"><a href="/user/signup_view">가입하기</a></div>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -54,6 +59,22 @@
 					return;
 				}
 				
+				$.ajax({
+					type:"post",
+					url:"/user/sign_in",
+					data:{"loginId":loginId, "password":password},
+					success:function(data) {
+						if(data.result == "success") {
+							alert("로그인 성공");
+						} else {
+							alert("아이디 비밀번호를 확인하세요.");
+						}
+					},
+					error:function(e) {
+						alert("로그인실패");
+					}
+					
+				});
 			});
 		});
 	</script>

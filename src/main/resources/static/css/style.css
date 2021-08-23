@@ -7,7 +7,6 @@
 
 header {
 	height:70px;
-	background-color:#f3a3f7;
 }
 
 section {
@@ -19,9 +18,14 @@ section {
 	height:600px;
 }
 
+.loginBoxImage {
+	width:300px;
+	height:600px;
+}
+
 .logo {
 	height:100px;
-	background-color:#f3a3f7;
+	border:solid 2px black;
 }
 
 .join-box {
@@ -40,5 +44,4 @@ section {
 
 footer {
 	height:50px;
-	background-color:#f3a3f7;
 }
