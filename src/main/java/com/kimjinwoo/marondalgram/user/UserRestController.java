@@ -69,6 +69,7 @@ public class UserRestController {
 			result.put("result", "success");
 			
 			HttpSession session = request.getSession();
+			session.setAttribute("userId", user.getId());
 			session.setAttribute("userLoginId", user.getLoginId());
 			session.setAttribute("userName", user.getName());
 			
