@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.kimjinwoo.marondalgram.post.bo.PostBO;
+import com.kimjinwoo.marondalgram.post.comment.bo.CommentBO;
+import com.kimjinwoo.marondalgram.post.comment.model.Comment;
 import com.kimjinwoo.marondalgram.post.model.Post;
 
 @Controller
@@ -20,6 +22,8 @@ public class PostController {
 	
 	@Autowired
 	private PostBO postBO;
+	@Autowired
+	private CommentBO commentBO;
 	
 	@GetMapping("/timeline")
 	public String timeline(Model model
@@ -31,6 +35,9 @@ public class PostController {
 		
 		List<Post> postList = postBO.getPostList(userId);
 		model.addAttribute("postList", postList);
+		
+		List<Comment> comments = commentBO.getComment(userId);
+		model.addAttribute("comments", comments);
 		
 		return "post/timeline";
 	}

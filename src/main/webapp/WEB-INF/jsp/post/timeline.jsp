@@ -66,7 +66,7 @@
 					<div class="font-weight-bold">댓글</div>
 					<hr>
 					<c:forEach var="comment" items="${comments }" varStatus="status">
-						<c:if test="${post.id } eq ${comment.postId }">
+						<c:if test="${post.id eq comment.postId }">
 							<div class="d-flex">
 								<div class="font-weight-bold mr-2">${comment.userName }</div>
 								<div>${comment.content }</div>

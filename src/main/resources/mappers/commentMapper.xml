@@ -37,7 +37,7 @@
  		FROM
  			`comment`
  		WHERE
- 			`postId` = #{postId}
+ 			`userId` = #{userId}
  		ORDER BY `id` DESC
  	</select>
  	
