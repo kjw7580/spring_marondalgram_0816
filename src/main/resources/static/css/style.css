@@ -1,16 +1,11 @@
 
 #wrap {
 	width:1200px;
-	height:800px;
 	margin:auto;
 }
 
 header {
 	height:70px;
-}
-
-section {
-	height:600px;
 }
 
 .login-box {
@@ -40,6 +35,15 @@ section {
 .signup-box {
 	width:400px;
 	height:500px;		
+}
+
+.upload-box {
+	border:solid 1px black;
+}
+
+.content-box {
+	border:solid 1px black;
+	width:666px;
 }
 
 footer {

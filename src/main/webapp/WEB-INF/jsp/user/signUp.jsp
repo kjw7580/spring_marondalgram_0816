@@ -16,7 +16,7 @@
 <body>
 	<div id="wrap">
 		<c:import url="/WEB-INF/jsp/include/header.jsp" />
-		<section class="content d-flex justify-content-center">
+		<section class="content d-flex justify-content-center my-5">
 			<div class="login-box h-100 d-flex justify-content-center align-items-center">
 				<div class="w-100">
 					<div class="logo d-flex form-control justify-content-center align-items-center"><h1>Marondalgram</h1></div>

@@ -1,7 +1,11 @@
 package com.kimjinwoo.marondalgram.post.dao;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
+
+import com.kimjinwoo.marondalgram.post.model.Post;
 
 @Repository
 public interface PostDAO {
@@ -11,4 +15,6 @@ public interface PostDAO {
 			, @Param("userName") String userName
 			, @Param("content") String content
 			, @Param("imagePath") String imagePath);
+	
+	public List<Post> selectTimeline(@Param("userId") int userId);
 }

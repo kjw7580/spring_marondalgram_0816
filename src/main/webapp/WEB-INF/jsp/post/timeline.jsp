@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>    
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -12,13 +13,15 @@
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" integrity="sha384-+YQ4JLhjyBLPDQt//I+STsc9iw4uQqACwlvpslubQzn4u2UU2UFM80nGisd026JF" crossorigin="anonymous"></script>
     
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+    
     <link rel="stylesheet" href="/static/css/style.css">
 </head>
 <body>
 	<div id="wrap">
 		<c:import url="/WEB-INF/jsp/include/header.jsp" />
-		<section class="d-flex justify-content-center">
-			<div class="w-75 m-5">
+		<section class="d-flex justify-content-center my-5">
+			<div class="upload-box w-50 form-control">
 				<!-- 사용자, 내용, 파일 업로드 -->
 				
 				<!--
@@ -28,16 +31,50 @@
 				</div>
 				 -->
 				 
-				<textarea class="form-control mt-3" rows="5" id="contentInput" placeholder="내용을 입력해주세요."></textarea>
+				<textarea class="form-control" rows="5" id="contentInput" placeholder="내용을 입력해주세요."></textarea>
 				<!-- MIME -->
-				<input type="file" accept="image/*" class="mt-2" id="fileInput" multiple>
 				<div class="d-flex justify-content-between mt-3">
-					<a href="#" class="btn btn-info">취소</a>
+					<input type="file" accept="image/*" class="mt-2" id="fileInput" multiple>
 					<button type="button" class="btn btn-success" id="saveBtn">업로드</button>
 				</div>
-				<h1 class="text-center mt-5">Timeline</h1>
 			</div>
+			
 		</section>
+		
+		<c:forEach var="timeline" items="${timeline }" varStatus="status">
+			<div class="d-flex justify-content-center mb-5">
+				<div class="content-box form-control">
+					<div class="d-flex justify-content-between">
+						<div class="font-weight-bold"><i class="bi bi-person-circle"></i> ${timeline.userName }</div>
+						<div><i class="bi bi-three-dots"></i></div>
+					</div>
+					<hr>
+					<div class="mt-2"><img src="${timeline.imagePath }"></div>
+					
+					<div class="d-flex mt-2">
+						<i class="bi bi-heart"></i>
+						<div class="font-weight-bold ml-2">좋아요 26개</div>
+					</div>
+					
+					<div class="d-flex">
+						<div class="font-weight-bold mr-2">${timeline.userName }</div>
+						${timeline.content }
+					</div>
+					<small><fmt:formatDate value="${timeline.createdAt }" pattern="yyyy-MM-dd" /></small>
+					<hr>
+					<div class="font-weight-bold">댓글</div>
+					<hr>
+					<div class="d-flex">
+						<div class="font-weight-bold mr-2">kimjinwoo</div>
+						<div>댓글 기능 나중에 추가 예정...</div>
+					</div>
+					<div class="d-flex justify-content-between mt-2">
+						<input type="text" class="form-control mr-1" placeholder="댓글 달기...">
+						<button type="button" class="btn btn-primary">게시</button>
+					</div>
+				</div>
+			</div>
+		</c:forEach>
 		
 		<c:import url="/WEB-INF/jsp/include/footer.jsp" />
 	</div>
@@ -72,7 +109,7 @@
 					data:formData,
 					success:function(data) {
 						if(data.result == "success") {
-							// location.href="";
+							location.reload("/post/timeline");
 							alert("글 쓰기 성공");
 						} else {
 							alert("글 쓰기에 실패했습니다!");
