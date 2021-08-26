@@ -18,21 +18,19 @@ public class PostBO {
 	
 	public int addPost(int userId, String userName, String content, MultipartFile file) {
 		
-		String filePath = null;
-		if(file != null) {
-			FileManagerService fileManager = new FileManagerService();
-			
-			filePath = fileManager.saveFile(userId, file);
-			
-			if(filePath == null) {
-				return -1;
-			}
+		FileManagerService fileManager = new FileManagerService();
+		
+		String filePath = fileManager.saveFile(userId, file);
+		
+		if(filePath == null) {
+			return -1;
+
 		}
 		
 		return postDAO.insertPost(userId, userName, content, filePath);
 	}
 	
-	public List<Post> getTimeline(int userId) {
-		return postDAO.selectTimeline(userId);
+	public List<Post> getPostList(int userId) {
+		return postDAO.selectPostList(userId);
 	}
 }

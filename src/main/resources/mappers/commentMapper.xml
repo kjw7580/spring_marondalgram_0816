@@ -3,41 +3,42 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
  
- <mapper namespace="com.kimjinwoo.marondalgram.post.dao.PostDAO">
- 	<insert id="insertPost" parameterType="map">
+ <mapper namespace="com.kimjinwoo.marondalgram.post.comment.dao.CommentDAO">
+ 	<insert id="insertComment" parameterType="map">
  		INSERT INTO
- 			`post`
+ 			`comment`
  		(
  			`userId`
  			, `userName`
+ 			, `postId`
  			, `content`
- 			, `imagePath`
  			, `createdAt`
  			, `updatedAt`
  		) VALUES (
  			#{userId}
  			, #{userName}
+ 			, #{postId}
  			, #{content}
- 			, #{imagePath}
  			, now()
  			, now()
  		)
  		
  	</insert>
- 	
- 	<select id="selectPostList" parameterType="int" resultType="com.kimjinwoo.marondalgram.post.model.Post">
+ 
+ 	<select id="selectComment" parameterType="int" resultType="com.kimjinwoo.marondalgram.post.comment.model.Comment">
  		SELECT
  			`id`
  			, `userId`
  			, `userName`
+ 			, `postId`
  			, `content`
- 			, `imagePath`
  			, `createdAt`
  			, `updatedAt`
  		FROM
- 			`post`
+ 			`comment`
  		WHERE
- 			`userId` = #{userId}
+ 			`postId` = #{postId}
  		ORDER BY `id` DESC
  	</select>
+ 	
  </mapper>

@@ -34,22 +34,23 @@
 				<textarea class="form-control" rows="5" id="contentInput" placeholder="내용을 입력해주세요."></textarea>
 				<!-- MIME -->
 				<div class="d-flex justify-content-between mt-3">
-					<input type="file" accept="image/*" class="mt-2" id="fileInput" multiple>
+					<input type="file" accept="image/*" class="mt-2 d-none" id="fileInput" multiple>
+					<a href="#" id="imageUploadBtn" class="ml-2"><i class="bi bi-images"></i></a>
 					<button type="button" class="btn btn-success" id="saveBtn">업로드</button>
 				</div>
 			</div>
 			
 		</section>
 		
-		<c:forEach var="timeline" items="${timeline }" varStatus="status">
+		<c:forEach var="post" items="${postList }" varStatus="status">
 			<div class="d-flex justify-content-center mb-5">
 				<div class="content-box form-control">
 					<div class="d-flex justify-content-between">
-						<div class="font-weight-bold"><i class="bi bi-person-circle"></i> ${timeline.userName }</div>
+						<div class="font-weight-bold"><i class="bi bi-person-circle"></i> ${post.userName }</div>
 						<div><i class="bi bi-three-dots"></i></div>
 					</div>
 					<hr>
-					<div class="mt-2"><img src="${timeline.imagePath }"></div>
+					<div class="mt-2"><img src="${post.imagePath }"></div>
 					
 					<div class="d-flex mt-2">
 						<i class="bi bi-heart"></i>
@@ -57,20 +58,25 @@
 					</div>
 					
 					<div class="d-flex">
-						<div class="font-weight-bold mr-2">${timeline.userName }</div>
-						${timeline.content }
+						<div class="font-weight-bold mr-2">${post.userName }</div>
+						${post.content }
 					</div>
-					<small><fmt:formatDate value="${timeline.createdAt }" pattern="yyyy-MM-dd" /></small>
+					<small><fmt:formatDate value="${post.createdAt }" pattern="yyyy-MM-dd" /></small>
 					<hr>
 					<div class="font-weight-bold">댓글</div>
 					<hr>
-					<div class="d-flex">
-						<div class="font-weight-bold mr-2">kimjinwoo</div>
-						<div>댓글 기능 나중에 추가 예정...</div>
-					</div>
+					<c:forEach var="comment" items="${comments }" varStatus="status">
+						<c:if test="${post.id } eq ${comment.postId }">
+							<div class="d-flex">
+								<div class="font-weight-bold mr-2">${comment.userName }</div>
+								<div>${comment.content }</div>
+							</div>
+						</c:if>
+					</c:forEach>
+					
 					<div class="d-flex justify-content-between mt-2">
-						<input type="text" class="form-control mr-1" placeholder="댓글 달기...">
-						<button type="button" class="btn btn-primary">게시</button>
+						<input type="text" class="form-control mr-1" placeholder="댓글 달기..." id="commentInput-${post.id }">
+						<button type="button" class="btn btn-primary commentBtn" data-post-id="${post.id }">게시</button>
 					</div>
 				</div>
 			</div>
@@ -92,6 +98,11 @@
 				
 				if(content == null || content == "") {
 					alert("내용을 입력하세요.");
+					return;
+				}
+				
+				if($("#fileInput")[0].files.length == 0) {
+					alert("파일을 추가하세요.")
 					return;
 				}
 				
@@ -119,6 +130,43 @@
 						alert("error");
 					}
 						
+				});
+			});
+			
+			$("#imageUploadBtn").on("click", function() {
+				$("#fileInput").click();
+			});
+			
+			$(".commentBtn").on("click", function() {
+				var postId = $(this).data("post-id");
+				// $("#commentInput-1")
+				var content = $("#commentInput-" + postId).val();
+				
+				if(content == null || content == "") {
+					alert("내용을 입력하세요.");
+					return;
+				}
+				
+//	 			var formData = new FormData();
+//				formData.append("postId", postId);
+//				formData.append("content", content);
+				
+				$.ajax({
+					type:"get",
+					url:"/post/comment/create",
+					data:{"postId":postId, "content":content},
+					success:function(data) {
+						if(data.result == "success") {
+							location.reload("/post/timeline");
+							alert("댓글 쓰기 성공");
+						} else {
+							alert("댓글 쓰기에 실패했습니다!");
+						}
+					},
+					error(e) {
+						alert("error");
+					}
+					
 				});
 			});
 		});
