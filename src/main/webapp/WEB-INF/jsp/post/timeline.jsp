@@ -42,15 +42,15 @@
 			
 		</section>
 		
-		<c:forEach var="post" items="${postList }" varStatus="status">
+		<c:forEach var="postWithComments" items="${postList }" varStatus="status">
 			<div class="d-flex justify-content-center mb-5">
 				<div class="content-box form-control">
 					<div class="d-flex justify-content-between">
-						<div class="font-weight-bold"><i class="bi bi-person-circle"></i> ${post.userName }</div>
+						<div class="font-weight-bold"><i class="bi bi-person-circle"></i> ${postWithComments.post.userName }</div>
 						<div><i class="bi bi-three-dots"></i></div>
 					</div>
 					<hr>
-					<div class="mt-2"><img src="${post.imagePath }"></div>
+					<div class="mt-2"><img src="${postWithComments.post.imagePath }"></div>
 					
 					<div class="d-flex mt-2">
 						<i class="bi bi-heart"></i>
@@ -58,15 +58,15 @@
 					</div>
 					
 					<div class="d-flex">
-						<div class="font-weight-bold mr-2">${post.userName }</div>
-						${post.content }
+						<div class="font-weight-bold mr-2">${postWithComments.post.userName }</div>
+						${postWithComments.post.content }
 					</div>
-					<small><fmt:formatDate value="${post.createdAt }" pattern="yyyy-MM-dd" /></small>
+					<small><fmt:formatDate value="${postWithComments.post.createdAt }" pattern="yyyy-MM-dd" /></small>
 					<hr>
 					<div class="font-weight-bold">댓글</div>
 					<hr>
-					<c:forEach var="comment" items="${comments }" varStatus="status">
-						<c:if test="${post.id eq comment.postId }">
+					<c:forEach var="comment" items="${postWithComments.commentList }" varStatus="status">
+						<c:if test="${postWithComments.post.id eq comment.postId }">
 							<div class="d-flex">
 								<div class="font-weight-bold mr-2">${comment.userName }</div>
 								<div>${comment.content }</div>
@@ -75,8 +75,8 @@
 					</c:forEach>
 					
 					<div class="d-flex justify-content-between mt-2">
-						<input type="text" class="form-control mr-1" placeholder="댓글 달기..." id="commentInput-${post.id }">
-						<button type="button" class="btn btn-primary commentBtn" data-post-id="${post.id }">게시</button>
+						<input type="text" class="form-control mr-1" placeholder="댓글 달기..." id="commentInput-${postWithComments.post.id }">
+						<button type="button" class="btn btn-primary commentBtn" data-post-id="${postWithComments.post.id }">게시</button>
 					</div>
 				</div>
 			</div>
@@ -140,9 +140,9 @@
 			$(".commentBtn").on("click", function() {
 				var postId = $(this).data("post-id");
 				// $("#commentInput-1")
-				var content = $("#commentInput-" + postId).val();
+				var comment = $("#commentInput-" + postId).val().trim();
 				
-				if(content == null || content == "") {
+				if(comment == null || comment == "") {
 					alert("내용을 입력하세요.");
 					return;
 				}
@@ -154,7 +154,7 @@
 				$.ajax({
 					type:"get",
 					url:"/post/comment/create",
-					data:{"postId":postId, "content":content},
+					data:{"postId":postId, "content":comment},
 					success:function(data) {
 						if(data.result == "success") {
 							location.reload("/post/timeline");

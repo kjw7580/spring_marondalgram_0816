@@ -25,7 +25,7 @@
  		
  	</insert>
  
- 	<select id="selectComment" parameterType="int" resultType="com.kimjinwoo.marondalgram.post.comment.model.Comment">
+ 	<select id="selectCommentByPostId" parameterType="int" resultType="com.kimjinwoo.marondalgram.post.comment.model.Comment">
  		SELECT
  			`id`
  			, `userId`
@@ -37,7 +37,7 @@
  		FROM
  			`comment`
  		WHERE
- 			`userId` = #{userId}
+ 			`postId` = #{postId}
  		ORDER BY `id` DESC
  	</select>
  	
