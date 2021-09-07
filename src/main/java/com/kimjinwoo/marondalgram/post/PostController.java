@@ -3,6 +3,7 @@ package com.kimjinwoo.marondalgram.post;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,11 +25,10 @@ public class PostController {
 	public String timeline(Model model
 			, HttpServletRequest request) {
 		
-//		HttpSession session = request.getSession();
+		HttpSession session = request.getSession();
+		int userId = (Integer)session.getAttribute("userId");
 		
-//		int userId = (Integer)session.getAttribute("userId");
-		
-		List<PostWithComments> postList = postBO.getPostList();
+		List<PostWithComments> postList = postBO.getPostList(userId);
 		
 		model.addAttribute("postList", postList);
 		
