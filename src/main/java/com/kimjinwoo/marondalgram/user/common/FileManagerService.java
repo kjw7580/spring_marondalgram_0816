@@ -55,4 +55,39 @@ public class FileManagerService {
 		return "/images/" + directoryName + file.getOriginalFilename();
 		
 	}
+	
+	public void removeFile(String filePath) {
+		
+		// 삭제할 파일 경로
+		// filePath : /images/10_21924214/test.png
+		// 실제 파일이 저장된 경로 : D:\\c김진우\\spring_test\\upload\\marondalgram\\images\\10_21924214\\test.png
+		
+		String realFilePath = FILE_UPLOAD_PATH + filePath.replace("/images/", "");
+		
+		// 파일 지우고
+		Path path = Paths.get(realFilePath);
+		// 해당 파일이 있는지
+		if(Files.exists(path)) {
+			try {
+				Files.delete(path);
+			} catch (IOException e) {
+				logger.error("[FileManagerService saveFile] file delete fail");
+				e.printStackTrace();
+			}
+		}
+		
+		// 디렉토리(폴더) 지우고
+		// D:\\c김진우\\spring_test\\upload\\marondalgram\\images\\10_21924214
+		path = path.getParent();
+		
+		if(Files.exists(path)) {
+			try {
+				Files.delete(path);
+			} catch (IOException e) {
+				logger.error("[FileManagerService saveFile] directory delete fail");
+				e.printStackTrace();
+			}
+		}
+		
+	}
 }

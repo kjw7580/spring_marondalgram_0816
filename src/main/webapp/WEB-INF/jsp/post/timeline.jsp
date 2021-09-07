@@ -20,17 +20,10 @@
 <body>
 	<div id="wrap">
 		<c:import url="/WEB-INF/jsp/include/header.jsp" />
+		
+		<!-- 업로드 박스 -->
 		<section class="d-flex justify-content-center my-5">
 			<div class="upload-box w-50 form-control">
-				<!-- 사용자, 내용, 파일 업로드 -->
-				
-				<!--
-				<div class="d-flex align-items-center">
-					<label>사용자 : </label>
-					<input type="text" class="form-control col-11 ml-3" id="userNameInput">
-				</div>
-				 -->
-				 
 				<textarea class="form-control" rows="5" id="contentInput" placeholder="내용을 입력해주세요."></textarea>
 				<!-- MIME -->
 				<div class="d-flex justify-content-between mt-3">
@@ -39,30 +32,59 @@
 					<button type="button" class="btn btn-success" id="saveBtn">업로드</button>
 				</div>
 			</div>
-			
 		</section>
+		<!-- /업로드 박스 -->
 		
+		<!-- 피드 -->
 		<c:forEach var="postWithComments" items="${postList }" varStatus="status">
 			<div class="d-flex justify-content-center mb-5">
 				<div class="content-box form-control">
+					
+					<!-- 타이틀 -->
 					<div class="d-flex justify-content-between">
 						<div class="font-weight-bold"><i class="bi bi-person-circle"></i> ${postWithComments.post.userName }</div>
-						<div><i class="bi bi-three-dots"></i></div>
+						
+						<%-- 글의 userId 와 세션의 userId 가 일치하면 더보기 버튼 노출 --%>
+						<c:if test="${postWithComments.post.userId eq userId }">
+							<div>
+								<a class="text-dark moreBtn" href="#" data-toggle="modal" data-target="#deleteModal" data-post-id="${postWithComments.post.id }">
+									<i class="bi bi-three-dots"></i>
+								</a>
+							</div>
+						</c:if>
 					</div>
 					<hr>
-					<div class="mt-2"><img src="${postWithComments.post.imagePath }"></div>
 					
-					<div class="d-flex mt-2">
-						<i class="bi bi-heart"></i>
-						<div class="font-weight-bold ml-2">좋아요 26개</div>
+					<!-- 이미지 -->
+					<div class="mt-2">
+						<img src="${postWithComments.post.imagePath }" class="imageClick" data-post-id="${postWithComments.post.id }">
 					</div>
 					
+					<!-- 좋아요 -->
+					<div class="d-flex mt-2">
+						<a href="#" class="likeBtn" data-post-id="${postWithComments.post.id }">
+							<c:choose>
+								<c:when test="${postWithComments.like }">
+										<i class="bi bi-heart-fill text-danger" id="heartIcon-${postWithComments.post.id }"></i>
+								</c:when>
+								<c:otherwise>
+										<i class="bi bi-heart text-dark" id="heartIcon-${postWithComments.post.id }"></i>
+								</c:otherwise>
+							</c:choose>
+						</a>
+						
+						<div class="font-weight-bold ml-2">좋아요 <span id="likeCount-${postWithComments.post.id }">${postWithComments.likeCount }</span>개</div>
+					</div>
+					
+					<!-- content -->
 					<div class="d-flex">
 						<div class="font-weight-bold mr-2">${postWithComments.post.userName }</div>
 						${postWithComments.post.content }
 					</div>
 					<small><fmt:formatDate value="${postWithComments.post.createdAt }" pattern="yyyy-MM-dd" /></small>
 					<hr>
+					
+					<!-- 댓글 -->
 					<div class="font-weight-bold">댓글</div>
 					<hr>
 					<c:forEach var="comment" items="${postWithComments.commentList }" varStatus="status">
@@ -74,6 +96,7 @@
 						</c:if>
 					</c:forEach>
 					
+					<!-- 댓글 입력 -->
 					<div class="d-flex justify-content-between mt-2">
 						<input type="text" class="form-control mr-1" placeholder="댓글 달기..." id="commentInput-${postWithComments.post.id }">
 						<button type="button" class="btn btn-primary commentBtn" data-post-id="${postWithComments.post.id }">게시</button>
@@ -81,11 +104,61 @@
 				</div>
 			</div>
 		</c:forEach>
+		<!-- /피드 -->
 		
 		<c:import url="/WEB-INF/jsp/include/footer.jsp" />
 	</div>
 	
+	<!-- 모달의 a태그에 data-post-id 의 값을 더보기 클릭시마다 바꿔준다. -->
+	
+	<!-- 모달의 a태그의 클릭 이벤트를 만들고, 그 안에서 post-id로 삭제를 진행한다. -->
+	
+	<!-- Modal -->
+	<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-hidden="true">
+	  <div class="modal-dialog modal-dialog-centered" role="document">
+	    <div class="modal-content">
+	      <div class="modal-body text-center">
+	        <a href="#" id="deleteBtn">삭제하기</a>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+
 	<script>
+	
+		$.processLike = function(postId) {
+			$.ajax({
+				type:"get",
+				url:"/post/like",
+				data:{"postId": postId},
+				success:function(data) {
+					// 좋아요
+					if(data.like) {
+						
+						$("#heartIcon-" + postId).removeClass("bi-heart");
+						$("#heartIcon-" + postId).addClass("bi-heart-fill");
+						
+						$("#heartIcon-" + postId).removeClass("text-dark");
+						$("#heartIcon-" + postId).addClass("text-danger");
+					} else { // unlike
+						$("#heartIcon-" + postId).addClass("bi-heart");
+						$("#heartIcon-" + postId).removeClass("bi-heart-fill");
+						
+						$("#heartIcon-" + postId).addClass("text-dark");
+						$("#heartIcon-" + postId).removeClass("text-danger");
+					}
+					$("#likeCount-" + postId).text(data.likeCount);
+					
+					//location.reload();
+						
+				},
+				error:function(e) {
+					alert("error");
+				}
+				
+			});
+		};
+	
 		$(document).ready(function() {
 			$("#saveBtn").on("click", function() {
 //				var userName = $("#userNameInput").val().trim();
@@ -120,8 +193,7 @@
 					data:formData,
 					success:function(data) {
 						if(data.result == "success") {
-							location.reload("/post/timeline");
-							alert("글 쓰기 성공");
+							location.reload();
 						} else {
 							alert("글 쓰기에 실패했습니다!");
 						}
@@ -157,8 +229,7 @@
 					data:{"postId":postId, "content":comment},
 					success:function(data) {
 						if(data.result == "success") {
-							location.reload("/post/timeline");
-							alert("댓글 쓰기 성공");
+							location.reload();
 						} else {
 							alert("댓글 쓰기에 실패했습니다!");
 						}
@@ -169,6 +240,52 @@
 					
 				});
 			});
+			
+			$(".likeBtn").on("click", function(e) {
+				e.preventDefault();
+				var postId = $(this).data("post-id");
+				
+				$.processLike(postId);
+				
+			});
+			
+			$(".imageClick").on("dblclick", function() {
+				var postId = $(this).data("post-id");
+				
+				$.processLike(postId);
+				
+			});
+			
+			$(".moreBtn").on("click", function() {
+				// postId를 모델에 삭제 버튼에 주입한다.
+				var postId = $(this).data("post-id");
+				
+				$("#deleteBtn").data("post-id", postId);
+			});
+			
+			<!-- 모달의 a태그의 클릭 이벤트를 만들고, 그 안에서 post-id로 삭제를 진행한다. -->
+			
+			$("#deleteBtn").on("click", function(e) {
+				e.preventDefault();
+				var postId = $(this).data("post-id");
+				
+				$.ajax({
+					type:"get",
+					url:"/post/delete",
+					data:{"postId":postId},
+					success:function(data) {
+						if(data.result == "success") {
+							location.reload();
+						} else {
+							alert("삭제 실패");
+						}
+					},
+					error:function(e) {
+						alert("error");
+					}
+				});
+			});
+			
 		});
 	</script>
 </body>
