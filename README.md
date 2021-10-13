@@ -35,7 +35,11 @@
 
 ## :page_facing_up: 포트폴리오
 
-### 링크를 클릭해주세요!! [포트폴리오](portfolio.pdf) 
+### 링크를 클릭해주세요!! [포트폴리오](portfolio.pdf)
+
+## :bulb: 설계
+ * ### UI 기획  
+   https://ovenapp.io/project/6QVkfXcvBbBteBwAvdreM3jbaFVK9RaV#kFnM3
 
 ## :paperclip: 구현한 핵심 기능 및 설명
 
